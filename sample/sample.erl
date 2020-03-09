@@ -1,12 +1,16 @@
 -module(sample).
 -import(lists,[nth/2]).
--export([main/2]).
--export([create/2, create/4, loop/2]).
+-export([main/1]).
+-export([create/3, create/6, loop/4]).
 
 
-main(Input_file, Output_file) ->
+main(Args) ->
+	Input_file = nth(1,Args),
+	Output_file = nth(2,Args),
 	{ok, File} = file:open(Input_file,[read]),
 	{ok, Txt} = file:read(File,1024*1024),
+	file:close(Input_file),
+	{ok, Out_File} = file:open(Output_file,[write]),
 	
 
 	% io:format("~p\n",[Txt]),
@@ -17,30 +21,32 @@ main(Input_file, Output_file) ->
 
 	% io:format("Original = ~p\n",[self()]),
 
-	spawn(sample,create,[N,Token]).
+	spawn(sample,create,[Out_File,N,Token]).
 
 	% io:format("~p ~p\n",[Token,N]).
 	% {Input_file,Output_file}.
 
-create(N,Token) ->
-	io:format("Original = ~p\n",[self()]),
+create(Out_File,N,Token) ->
+	% io:format("Original = ~p\n",[self()]),
 	Id = N,
-	create(Id,N,self(),Token).
+	Total = N,
+	create(Total,Out_File,Id,N,self(),Token).
 
-create(1,1,Next,Token) ->
+create(Total,Out_File,1,1,Next,Token) ->
 	% io:format("Process 0 received token ~p from")
 	Next ! Token,
-	io:format("Process ~p received token ~p from ~p\n",[1,Token,6]);
+	io:format("Process ~p received token ~p from process ~p\n",[1 rem Total,Token,0 rem Total]);
 
-create(Id,N,Next,Token) ->
-	Prev = spawn_link(sample,loop,[Id,Next]),
-	create(Id-1,N-1,Prev,Token).
+create(Total,Out_File,Id,N,Next,Token) ->
+	Prev = spawn_link(sample,loop,[Total,Out_File,Id,Next]),
+	% io:format("~p ~p~n",[Prev,Next]),
+	create(Total,Out_File,Id-1,N-1,Prev,Token).
 
-loop(Id,Next) ->
+loop(Total,Out_File,Id,Next) ->
 	receive
 		Token ->
 			% io:format("~p\n",[(Total-N+1) rem Total]),
-			io:format("Process ~p received token ~p from process ~p\n",[Id,Token,Id-1]),
+			io:format("Process ~p received token ~p from process ~p\n",[Id rem Total,Token,(Id-1) rem Total]),
 			Next ! Token,
 			ok
 	end.
