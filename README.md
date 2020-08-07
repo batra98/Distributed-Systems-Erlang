@@ -1,11 +1,7 @@
-                                                     Assignment-IV
-                                                  Distributed Systems
-                                                     Gaurav Batra
-                                                      20171114
-
+# Simple Token passing system and parallelized version of mergesort                                                
 Using Erlang to implement a simple token passing architecture and parallelized version of mergesort.
  
-# Run
+# :runing: Run
 **Compile** : 
 ```
 erlc <File>.erl
@@ -16,6 +12,8 @@ erlc <File>.erl
 erl -noshell -s <File> main input.txt output.txt -s init stop
 
 ```
+
+[![asciicast](https://asciinema.org/a/NnumpmMlx0U0LfLT0UdL3FSKK.svg)](https://asciinema.org/a/NnumpmMlx0U0LfLT0UdL3FSKK)
 
 # Files 
 ──> README.md       // Instructions
@@ -33,4 +31,9 @@ erl -noshell -s <File> main input.txt output.txt -s init stop
 ## Parrallel Merge-Sort:
 1. We divide the array of Integers into 8 processes.
 2. All the processes sort the processes locally and return the result to their parent for merging.
-3. Eventually, the initiator receives the sorted Array,which it prints to output file. 
+3. Eventually, the initiator receives the sorted Array,which it prints to output file.
+
+________
+
+Feel free to contribute :heart:
+ 

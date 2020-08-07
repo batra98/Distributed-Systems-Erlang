@@ -1,4 +1,4 @@
--module(sample).
+-module('20171114_1').
 -import(lists,[nth/2]).
 -export([main/1]).
 -export([create/3, create/6, loop/4]).
@@ -21,7 +21,7 @@ main(Args) ->
 
 	% io:format("Original = ~p\n",[self()]),
 
-	spawn(sample,create,[Output_file,N,Token]).
+	spawn('20171114_1',create,[Output_file,N,Token]).
 
 	% io:format("~p ~p\n",[Token,N]).
 	% {Input_file,Output_file}.
@@ -35,13 +35,13 @@ create(Output_file,N,Token) ->
 create(Total,Output_file,1,1,Next,Token) ->
 	% io:format("Process 0 received token ~p from")
 	{ok,Out_File} = file:open(Output_file,[write]),
-	io:format(Out_File,"Process ~p received token ~p from process ~p\n",[1 rem Total,Token,0 rem Total]),
+	io:format(Out_File,"Process ~p received token ~p from process ~p.\n",[1 rem Total,Token,0 rem Total]),
 	file:close(Output_file),
 	Next ! Token;
 	% io:format("Process ~p received token ~p from process ~p\n",[1 rem Total,Token,0 rem Total]);
 
 create(Total,Output_file,Id,N,Next,Token) ->
-	Prev = spawn_link(sample,loop,[Total,Output_file,Id,Next]),
+	Prev = spawn_link('20171114_1',loop,[Total,Output_file,Id,Next]),
 	% io:format("~p ~p~n",[Prev,Next]),
 	create(Total,Output_file,Id-1,N-1,Prev,Token).
 
@@ -50,7 +50,7 @@ loop(Total,Output_file,Id,Next) ->
 		Token ->
 			% io:format("~p\n",[(Total-N+1) rem Total]),
 			{ok,Out_File} = file:open(Output_file,[append]),
-			io:format(Out_File,"Process ~p received token ~p from process ~p\n",[Id rem Total,Token,(Id-1) rem Total]),
+			io:format(Out_File,"Process ~p received token ~p from process ~p.\n",[Id rem Total,Token,(Id-1) rem Total]),
 			file:close(Output_file),
 
 			Next ! Token,
