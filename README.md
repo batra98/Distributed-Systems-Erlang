@@ -1,7 +1,7 @@
 # Simple Token passing system and parallelized version of mergesort                                                
 Using Erlang to implement a simple token passing architecture and parallelized version of mergesort.
  
-# :runing: Run
+# :running: Run
 **Compile** : 
 ```
 erlc <File>.erl
